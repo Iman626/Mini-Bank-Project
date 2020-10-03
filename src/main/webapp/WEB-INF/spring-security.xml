@@ -1,0 +1,30 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+             http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+             http://www.springframework.org/schema/security
+             http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+
+    <http auto-config="true" use-expressions="true">
+        <intercept-url pattern="/admin" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/managerPage" access="hasRole('ROLE_MANAGER')"/>
+        <intercept-url pattern="/login" access="permitAll()"/>
+        <access-denied-handler error-page="/403"/>
+        <form-login
+                login-page="/login"
+                default-target-url="/profile"
+                authentication-failure-url="/enter?error=1"
+                username-parameter="login_parameter"
+                password-parameter="password_parameter"/>
+        <logout logout-success-url="/login?logout=1"/>
+        <csrf/>
+    </http>
+
+    <authentication-manager>
+        <authentication-provider user-service-ref="userSecurity">
+            <password-encoder hash="sha"/>
+        </authentication-provider>
+    </authentication-manager>
+
+</beans:beans>
